@@ -1,0 +1,101 @@
+<html lang="en" ng-app="StarterApp">
+  <head>
+
+    <link rel="stylesheet" type="text/css"  href="css/menuSidebar.css">
+    <link rel="stylesheet" type="text/css"  href="css/bottomSheetDemo.css">
+
+    <link rel="stylesheet" href="css/angular-material.min.css">
+  <style type="text/css">
+[ng-cloak].splash {
+  display: block !important;
+}
+[ng-cloak] {display: none;}
+/* some naive styles for a splash page */
+.splash {
+  display: none;
+  background: blue;
+  color: white;
+}
+.splash h2 {
+  font-size: 2.1em;
+  font-weight: 500;
+}
+  </style>
+  </head>
+  <body>
+    <!-- The splash screen must be first -->
+    <div class="splash" ng-cloak="">
+        <p>Loading</p>
+    </div>
+    <!-- The rest of our app -->
+    <div id="ameyaApp" layout="column" ng-controller="AppCtrl" ng-cloak="">
+      <!-- Angular Material Dependencies -->
+      <script src="js/hammer.min.js"></script>
+      <script src="js/angular.min.js"></script>
+      <script src="js/angular-touch.min.js"></script>
+      <script src="js/angular-animate.min.js"></script>
+      <script src="js/angular-aria.min.js"></script>
+      <script src="js/angular-material.min.js"></script>
+      <!-- Custom for page -->
+      <script src="js/ameya-page.js"></script>
+
+      <md-toolbar layout="row">
+        <button ng-click="toggleSidenav('left')" hide-gt-sm class="menuBtn">
+          <span class="visuallyhidden">Menu</span>
+        </button>
+        <h1>What is my IP</h1>
+      </md-toolbar>
+      <div layout="row" flex>
+          <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$media('gt-sm')" ng-swipe-left="toggleSidenav('left')">
+                  <md-toolbar class="md-theme-indigo">
+                    <h1>What's more?</h1>
+                  </md-toolbar>
+                  <md-content class="md-padding" ng-controller="LeftCtrl">
+    <md-list>
+      <md-item ng-repeat="item in items">
+        <md-button class="md-primary" aria-label="{{item.name}}" ng-click="listItemClick($index)">
+          {{ item.name }}
+        </md-button>
+      </md-item>
+    </md-list>
+                    <md-button ng-click="close()" class="md-primary" hide-gt-md>
+                      Go back..
+                    </md-button>
+                    <p hide-md show-gt-md>
+                      It will be great if you can rate us.
+                    </p>
+                  </md-content>
+          </md-sidenav>
+
+          <div layout="row" layout-align="center center" ng-show="isLoading">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+          </div>
+
+          <div layout="column" flex md-theme="green" id="content" ng-hide="isLoading" ng-swipe-right="toggleSidenav('left')">
+              <md-content layout="column" flex class="md-padding">
+
+                <h2>Ameya 2</h2>
+  <div ng-controller="BottomSheetExample">
+    <p style="padding-left: 20px;">
+      Bottom sheet can be dismissed with the service or a swipe down.
+    </p>
+    <div class="bottom-sheet-demo inset" layout="column" layout-sm="row" layout-align="center">
+      <md-button class="md-primary" ng-click="showListBottomSheet($event)">
+        Show as List
+      </md-button>
+      <div style="width:50px;"></div>
+      <md-button class="md-primary" ng-click="showGridBottomSheet($event)">
+        Show as Grid
+      </md-button>
+    </div>
+    <br/>
+    <b layout="row" layout-align="center center" layout-margin>
+      {{alert}}
+    </b>
+  </div>
+              </md-content>
+          </div>
+      </div>
+    </div>
+  </body>
+</html>

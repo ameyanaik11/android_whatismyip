@@ -1,0 +1,190 @@
+<html lang="en" ng-app="StarterApp">
+  <head>
+<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css"  href="css/menuSidebar.css">
+    <link rel="stylesheet" href="css/angular-material.min.css">
+<style type="text/css">
+  .ameyaTitle {
+    color: #ffffff;
+  }
+.aboutUsPageForm {
+    background: #f7f7f7;
+  /** From vulcanized demo **/ }
+  .aboutUsPageForm .error {
+    color: #f70000;
+  }
+  .aboutUsPageForm section {
+    background: #f7f7f7;
+    border-radius: 3px;
+    text-align: center;
+    position: relative !important;
+    padding-bottom: 10px; }
+  .aboutUsPageForm md-content {
+    margin-right: 7px; }
+  .aboutUsPageForm section .md-button:not(.md-fab) {
+    min-width: 10em; }
+  .aboutUsPageForm section .md-primary {
+    background-color: rgb(63,81,181);
+  }
+  .aboutUsPageForm section .md-success {
+    background-color: rgb(0,181,0);
+  }
+  .aboutUsPageForm section .md-button {
+    /* background-color: rgb(63,81,181); */
+    color: #ffffff;
+    display: block;
+    line-height: 25px; }
+  .aboutUsPageForm .label {
+    position: absolute;
+    bottom: 5px;
+    left: 7px;
+    color: #ccc;
+    font-size: 14px; }
+</style>
+  </head>
+  <body ng-controller="AppCtrl">
+    <!-- The rest of our app -->
+    <div id="ameyaApp" layout="column">
+      <!-- Angular Material Dependencies -->
+      <script src="js/hammer.min.js"></script>
+      <script src="js/angular.min.js"></script>
+      <script src="js/angular-touch.min.js"></script>
+      <script src="js/angular-animate.min.js"></script>
+      <script src="js/angular-aria.min.js"></script>
+      <script src="js/angular-material.min.js"></script>
+      <script src="js/angular-sanitize.min.js"></script>
+      <script src="js/angular-messages.min.js"></script>
+      <!-- Cordova JS -->
+      <script src="cordova.js"></script>
+      <script src="js/ng-cordova.js"></script>
+      <!-- ui-bootstrap -->
+      <script src="js/ui-bootstrap-tpls.min.js"></script>
+      <!-- Custom for page -->
+      <script src="js/ameya-page.js"></script>
+
+      <md-toolbar layout="row">
+        <button ng-click="toggleSidenav('left')" hide-gt-sm class="menuBtn">
+          <span class="visuallyhidden">Menu</span>
+        </button>
+        <h1 class="ameyaTitle">What is my IP</h1>
+      </md-toolbar>
+
+      <div layout="row" flex>
+        <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z4" md-component-id="left" md-is-locked-open="$media('gt-sm')" ng-swipe-left="toggleSidenav('left')">
+          <md-toolbar class="md-theme-indigo">
+            <h1>What's more?</h1>
+          </md-toolbar>
+          <md-content class="md-padding">
+            <md-list>
+              <md-item ng-repeat="item in sideNavigation">
+                <md-button class="md-primary" aria-label="{{item.name}}" ng-click="listItemClick($index)">
+                  {{ item.name }}
+                </md-button>
+              </md-item>
+            </md-list>
+            <md-button ng-click="close()" class="md-primary" hide-gt-md>
+              Go back..
+            </md-button>
+            <p hide-md show-gt-md>
+              It will be great if you can rate us.
+            </p>
+          </md-content>
+        </md-sidenav>
+        
+        <div ng-show="isView('main')" layout="column" flex md-theme="green" id="content" ng-swipe-right="toggleSidenav('left')">
+          <md-content layout="column" flex class="md-padding">
+            <div ng-show="alert" id="alert-s" class="alert {{alert.type}}" role="alert">
+              {{alert.text}}
+              <a ng-show="alert.button" class="btn btn-small btn-block {{alert.button.type}}" ng-click="{{alert.button.click}}" href="#" role="button">{{alert.button.text}}</a>
+            </div>
+            <div ameyahtml ng-bind-html="myHTML" ng-hide="isLoading"></div>
+            <div layout="row" layout-align="center center" layout-fill ng-show="isLoading">
+              <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+          </md-content>
+        </div>
+
+        <div ng-show="isView('comment')" flex  id="content" ng-swipe-right="toggleSidenav('left')">
+          <md-content class="md-padding">
+            <h2>We would love to hear from you!</h2>
+            <p>Please share any feedback, including what you do or dont like about 'What is my IP'.</p>
+            <form name="aboutUsPageForm" class="aboutUsPageForm" ng-submit="submitFeedbackForm(feedbackForm)">
+              <div layout>
+                <md-input-container flex>
+                  <label>To</label>
+                  <input name="sendTo" ng-model="feedbackForm.sendTo" disabled>      
+                  <div ng-messages="aboutUsPageForm.userName.$error" class="error">
+                    <div ng-message="required">This is required.</div>
+                    <div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>
+                  </div>
+                </md-input-container>
+              </div>
+              <div layout layout-sm="column">
+                <md-input-container flex>
+                  <label>From: Your Name</label>
+                  <input name="userName" ng-model="feedbackForm.userName" md-maxlength="30">      
+                  <div ng-messages="aboutUsPageForm.userName.$error" class="error">
+                    <div ng-message="required">This is required.</div>
+                    <div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>
+                  </div>
+                </md-input-container>
+                <md-input-container flex>
+                  <label>E-mail address</label>
+                  <input required name="userEmail" ng-model="feedbackForm.userEmail" type="email">
+                  <div class="error" ng-messages="aboutUsPageForm.userEmail.$error" class="error">
+                    <div ng-message="required">This is required.</div>
+                    <div ng-message="email">This is not a valid email address.</div>
+                  </div>
+                </md-input-container>
+              </div>
+              <div layout="row">
+                <md-input-container flex>
+                  <label>Feedback / Suggestion</label>
+                  <textarea name="comment" ng-model="feedbackForm.comment" required md-maxlength="200"></textarea>
+                  <div ng-messages="aboutUsPageForm.comment.$error" class="error">
+                    <div ng-message="required">This is required!</div>
+                    <div ng-message="md-maxlength">That's too long!</div>
+                  </div>
+                </md-input-container>
+              </div>
+              <section ng-show="feedbackButton.current" layout="row" layout-sm="column" layout-align="center center">
+                <md-button class=" btn-block md-raised {{feedbackButton.current.class}}">
+                  <md-progress-linear ng-show="feedbackButton.current.isLoading" md-mode="indeterminate">Loading</md-progress-linear>
+                  {{feedbackButton.current.text}}
+                </md-button>
+              </section>
+              <section layout="row" layout-sm="column" layout-align="center center">
+                <md-button class="btn-block md-raised md-primary" ng-click="setView('main')">
+                  Get me back to app!
+                </md-button>
+              </section>
+            </form>
+          </md-content>
+        </div>
+
+        <div class="jumbotron" ng-show="isView('aboutUs')" flex md-theme="green" id="content" ng-swipe-right="toggleSidenav('left')">
+          <md-content layout="column" flex class="md-padding">
+            <table class="table table-striped" id="ipDetails">
+              <tbody>
+                <tr><td>Version {{appInfo.version}}</td></tr>
+                <tr><td>(c) What is my IP, 2015</td></tr>
+                <tr><td></td></tr>
+                <tr><td>Please leave questions, bug reports, or comments to:</td></tr>
+                <tr><td>Email: <a href="mailto:admin@ameyanaik.com">admin@ameyanaik.com</a></td></tr>
+              </tbody>
+            </table>
+            <p><a class="btn btn-primary btn-block" ng-click="setView('main')" role="button">Get me back to app!</a></p>
+          </md-content>
+        </div>
+      </div>
+
+	   <footer class="footer">
+      <div class="container">
+        <p class="text-muted">&copy; 2015 - What is my IP</p>
+      </div>
+    </footer>
+    </div>
+  </body>
+</html>
